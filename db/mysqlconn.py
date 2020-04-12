@@ -3,7 +3,7 @@ from settings import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_PORT, MYSQL_D
 from pypinyin import lazy_pinyin
 
 
-class Save2Mysql(object):
+class MysqlConn(object):
     def __init__(self):
         self.host = MYSQL_HOST
         self.user = MYSQL_USER
@@ -31,21 +31,17 @@ class Save2Mysql(object):
 
     def add_table(self):
         sql = """CREATE TABLE IF NOT EXISTS %s(
-        job_id INT(8) NOT NULL PRIMARY KEY,
-        city_id INT(20) NOT NULL,
-        job_name VARCHAR(100),
-        job_area VARCHAR(255),
-        job_salary VARCHAR(100),
-        job_exe VARCHAR(255),
-        job_edu VARCHAR(10),
-        job_tags VARCHAR(100),
-        job_welfare VARCHAR(255),
-        contact VARCHAR(100),
-        position VARCHAR(100),
-        company_name VARCHAR(100),
-        company_industry VARCHAR(100),
-        company_natural VARCHAR(100),
-        company_size VARCHAR(100));
+        id INT(20) NOT NULL PRIMARY KEY,
+        city_name VARCHAR(20),
+        address VARCHAR(255),
+        title VARCHAR(255),
+        backCateName VARCHAR(255),
+        areaname VARCHAR(255),
+        avgprice INT(10),
+        avgscore DECIMAL(2,1),
+        comments VARCHAR(255),
+        phone VARCHAR(255),
+        imageUrl VARCHAR(255));
         """ % self.table
         self.cursor.execute(sql)
 
@@ -56,8 +52,8 @@ class Save2Mysql(object):
         INSERT INTO %s(
         %s
         ) VALUES(%s)
-        ON DUPLICATE KEY UPDATE job_id = values(job_id);
-
+        ON DUPLICATE KEY UPDATE id = values(id);
+        
         """ % (self.table, keys, val_num)
         try:
             self.cursor.execute(sql, tuple(data.values()))
@@ -75,9 +71,19 @@ class Save2Mysql(object):
 
 
 if __name__ == '__main__':
-    mysql = Save2Mysql()
+    mysql = MysqlConn()
     data = {
-
+            'id': 1223232222,
+            'title': 'hehe',
+            'city_name': 'qweqwe',
+            'address': 'qeqw',
+            'backCateName': 'backCateName',
+            'areaname': 'areaname',
+            'avgprice': 66,
+            'avgscore': 8.7,
+            'phone': 'phone',
+            'imageUrl': 'imageUrl',
+            'comments': 123,
     }
     mysql.insert(data)
 
